@@ -1,13 +1,18 @@
 const express = require('express')
-const path = require('path')
 const stocks = require('./stocks')
+const path = require('path');
 
 const app = express()
-app.use(express.static(path.join(__dirname, 'static')))
 
-app.get('/stocks', async (req, res) => {
+app.set('view engine', 'ejs');
+app.set('views', 'state');
+
+
+app.listen(3000, () => console.log('Server Started!'))
+
+app.get('/', async (req, res) => {
   const stockSymbols = await stocks.getStocks()
-  res.send({ stockSymbols })
+  res.render('st', {STOCKS: stockSymbols});
 })
 
 app.get('/stocks/:symbol', async (req, res) => {
@@ -16,4 +21,4 @@ app.get('/stocks/:symbol', async (req, res) => {
   res.send(data)
 })
 
-app.listen(3000, () => console.log('Server is running!'))
+
